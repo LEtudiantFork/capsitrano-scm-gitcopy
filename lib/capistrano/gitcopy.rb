@@ -25,9 +25,9 @@ class Capistrano::GitCopy < Capistrano::SCM
 
     def clone
       if (depth = fetch(:git_shallow_clone))
-        git :clone, '--verbose', '--mirror', '--depth', depth, '--no-single-branch', repo_url, repo_path
+        git :clone, '-b', fetch(:branch), '--verbose', '--depth', depth, '--no-single-branch', repo_url, repo_path
       else
-        git :clone, '--verbose', '--mirror', repo_url, repo_path
+        git :clone, '-b', fetch(:branch), '--verbose', repo_url, repo_path
       end
     end
 
@@ -41,7 +41,7 @@ class Capistrano::GitCopy < Capistrano::SCM
     end
 
     def fetch_revision
-      context.capture(:git, "rev-list --max-count=1 --abbrev-commit --abbrev=12 #{fetch(:branch)}")
+      context.capture(:git, "--git-dir=#{repo_path}/.git rev-parse --short HEAD")
     end
 
     def local_tarfile
@@ -53,13 +53,7 @@ class Capistrano::GitCopy < Capistrano::SCM
     end
 
     def release
-      if (tree = fetch(:repo_tree))
-        tree = tree.slice %r#^/?(.*?)/?$#, 1
-        components = tree.split('/').size
-        git :archive, fetch(:branch), tree, '--format', 'tar', "|gzip > #{local_tarfile}"
-      else
-        git :archive, fetch(:branch), '--format', 'tar', "|gzip > #{local_tarfile}"
-      end
+      `tar -C  #{repo_path} -zcvf #{local_tarfile} --exclude .git --exclude \"*.log\" .`
     end
   end 
 
