@@ -35,7 +35,7 @@ namespace :gitcopy do
   desc 'Clone the repo to the cache'
   task clone: :'gitcopy:wrapper' do
     run_locally do
-      execute :rm, '-r', repo_path
+      execute :rm, '-rf', repo_path
       execute :mkdir, '-p', repo_path
       if strategy.test
         info t(:mirror_exists, at: repo_path)
@@ -56,7 +56,7 @@ namespace :gitcopy do
         with fetch(:git_environmental_variables) do
           strategy.update
         end
-      end
+      end 
     end
   end
 
