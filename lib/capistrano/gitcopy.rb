@@ -25,9 +25,9 @@ class Capistrano::GitCopy < Capistrano::SCM
 
     def clone
       if (depth = fetch(:git_shallow_clone))
-        git :clone, '-b', fetch(:branch), '--verbose', '--depth', depth, '--no-single-branch', repo_url, repo_path
+        git :clone, '-b', fetch(:branch), '--depth', depth, '--no-single-branch', repo_url, repo_path
       else
-        git :clone, '-b', fetch(:branch), '--verbose', repo_url, repo_path
+        git :clone, '-b', fetch(:branch), repo_url, repo_path
       end
     end
 
