@@ -78,7 +78,7 @@ namespace :gitcopy do
       within deploy_to do
         execute :mkdir, '-p', release_path
         upload! strategy.local_tarfile, strategy.remote_tarfile
-        execute :tar, '--extract --verbose --file', strategy.remote_tarfile, '--directory', release_path
+        execute :tar, '--extract --file', strategy.remote_tarfile, '--directory', release_path
         execute :rm, strategy.remote_tarfile
       end
     end
